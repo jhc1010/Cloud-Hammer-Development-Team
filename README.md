@@ -13,13 +13,14 @@ https://portal.azure.com/ 접속 후 구독 생성
 ```
 az login --use-device-code
 
-az account set --subscription "id의 코드를 친다"
+az account set --subscription "구독 id 코드를 친다"
 ```
 
 # Terraform용 Service Principal 생성
 ```
-az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/id의 코드를 친다"
+az ad sp create-for-rbac --role="Contributor" --scopes="/subscriptions/구독 id 코드를 친다"
 ```
+하면 appid, tenant_id, password가 나오는데 환경변수에 넣는다
 
 # 환경변수
 ```
