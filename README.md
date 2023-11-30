@@ -6,7 +6,10 @@ Terraform-Azure 구축 가이드
 curl -sL https://aka.ms/InstallAzureCLIDeb | sudo bash
 ```
 
-# 로그인
+# 계정 생성 및 구독
+https://portal.azure.com/ 접속 후 구독 생성
+
+# 계정과 연동
 ```
 az login --use-device-code
 
