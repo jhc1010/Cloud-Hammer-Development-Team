@@ -1,12 +1,12 @@
- # Terraform을 통한 Azure Provider 구성
- terraform {
-   required_providers {
-     azurerm = {
-       source  = "hashicorp/azurerm"
-       version = "~>3.81.0"
-     }
-   }
- }
+#   # Terraform을 통한 Azure Provider 구성
+#  terraform {
+#    required_providers {
+#      azurerm = {
+#        source  = "hashicorp/azurerm"
+#        version = "~>3.81.0"
+#      }
+#    }
+#  } 
 
 # Azure Provider 설정
 provider "azurerm" {
