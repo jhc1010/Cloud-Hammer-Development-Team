@@ -1,12 +1,3 @@
-# terraform {
-    # required_providers {
-      #   google = {
-     #        source = "hashicorp/google"
-    #         version = "4.51.0"
-   #      }
-  #   }
- # }
-
 provider "google" {
     credentials = file("multi-cloud-406002-88bcf6b25331.json")
 
@@ -22,7 +13,6 @@ resource "google_compute_network" "vpc_network" {
 resource "google_compute_instance" "vm_instance" {
     name         = "terraform-instance"
     machine_type = "f1-micro"
-    //ssh-keys = "root:${file("/C:/Users/Admin/Downloads/multi-cloud-406002.pub")}"
     metadata = {
         ssh-keys = "root:${file("../../Downloads/multi-cloud-406002.pub")}"
     }
