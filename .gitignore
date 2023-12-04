@@ -2,6 +2,7 @@
 gcp_key.json
 naver.json
 aws.json
+azure.json
 # Local .terraform directories
 **/.terraform/*
 
