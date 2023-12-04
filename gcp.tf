@@ -8,7 +8,7 @@
  # }
 
 provider "google" {
-    credentials = file("multi-cloud-406002-88bcf6b25331.json")
+    credentials = file("gcp_key.json")
 
     project = "multi-cloud-406002"
     region  = "us-central1"
