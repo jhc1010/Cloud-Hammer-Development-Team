@@ -8,14 +8,18 @@ terraform {                                                                   # 
   required_version = ">= 0.13"                                                # Terraform 엔진의 최소 버전을 지정합니다.
 }
 
-# 네이버 클라우드 프로바이더 설정
-provider "ncloud" {
-  access_key = "엑세스키 입력"                                         # 네이버 클라우드 API 액세스 키
-  secret_key = "시크릿키 입력"                     # 네이버 클라우드 API 비밀 키
-  region     = "KR"                                                           # 리전 설정 (한국)
-  site       = "public"                                                       # 사이트 설정 (public)
-  support_vpc = "true"                                                        # VPC 지원 여부
+locals {
+  credentials = jsondecode(file("naver.json"))
 }
+
+provider "ncloud" {
+  access_key = local.credentials.naver_v0.accessKeyId
+  secret_key = local.credentials.naver_v0.secretKey
+  region     = "KR"
+  site       = "public"
+  support_vpc = true
+}
+
 
 # 네이버 클라우드 VPC 생성
 resource "ncloud_vpc" "vpc" {
