@@ -76,3 +76,4 @@ ssh -i demo-vm-private-key azureuser@퍼블릭 IP주소
 # 모든 리소스를 삭제
 ```
 terraform destroy -auto-approve
+# Cloud-Hammer-Development-Team
