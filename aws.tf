@@ -129,3 +129,5 @@ resource "aws_autoscaling_group" "my_asg" {
         propagate_at_launch = true
     }
 }
+
+# 12월 6일 수요일 pull
