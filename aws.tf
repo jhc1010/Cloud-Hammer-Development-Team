@@ -3,18 +3,31 @@ provider "aws" {
     region = "ap-northeast-2"
 }
 
-# EC2 인스턴스 생성
-resource "aws_instance" "AWS-my-EC2" {
-    ami           = "ami-01123b84e2a4fba05"
-    instance_type = "t2.micro"
-    subnet_id     = aws_subnet.AWS-my-subnet-A.id
-
+# VPC 리소스 생성
+resource "aws_vpc" "AWS-my-vpc" {
+    cidr_block = "172.16.0.0/16"
     tags = {
-        Name = "AWS-my-EC2"
+        Name = "AWS-my-vpc"
     }
+}
 
-    # 보안 그룹 설정
-    vpc_security_group_ids = [aws_security_group.AWS-my-sg.id]
+# Subnet 리소스 생성
+resource "aws_subnet" "AWS-my-subnet-A" {
+    vpc_id            = aws_vpc.AWS-my-vpc.id
+    cidr_block        = "172.16.10.0/24"
+    availability_zone = "ap-northeast-2a"
+    tags = {
+        Name = "AWS-my-subnet-A"
+    }
+}
+
+resource "aws_subnet" "AWS-my-subnet-B" {
+    vpc_id            = aws_vpc.AWS-my-vpc.id
+    cidr_block        = "172.16.20.0/24"
+    availability_zone = "ap-northeast-2c"
+    tags = {
+        Name = "AWS-my-subnet-B"
+    }
 }
 
 # 보안 그룹 생성
@@ -52,31 +65,18 @@ resource "aws_security_group" "AWS-my-sg" {
     }
 }
 
-# VPC 리소스 생성
-resource "aws_vpc" "AWS-my-vpc" {
-    cidr_block = "172.16.0.0/16"
-    tags = {
-        Name = "AWS-my-vpc"
-    }
-}
+# EC2 인스턴스 생성
+resource "aws_instance" "AWS-my-EC2" {
+    ami           = "ami-01123b84e2a4fba05"
+    instance_type = "t2.micro"
+    subnet_id     = aws_subnet.AWS-my-subnet-A.id
 
-# Subnet 리소스 생성
-resource "aws_subnet" "AWS-my-subnet-A" {
-    vpc_id            = aws_vpc.AWS-my-vpc.id
-    cidr_block        = "172.16.10.0/24"
-    availability_zone = "ap-northeast-2a"
     tags = {
-        Name = "AWS-my-subnet-A"
+        Name = "AWS-my-EC2"
     }
-}
 
-resource "aws_subnet" "AWS-my-subnet-B" {
-    vpc_id            = aws_vpc.AWS-my-vpc.id
-    cidr_block        = "172.16.20.0/24"
-    availability_zone = "ap-northeast-2c"
-    tags = {
-        Name = "AWS-my-subnet-B"
-    }
+    # 보안 그룹 설정
+    vpc_security_group_ids = [aws_security_group.AWS-my-sg.id]
 }
 
 # 오토스케일링에 사용될 Launch Configuration 생성
@@ -104,4 +104,39 @@ resource "aws_autoscaling_group" "AWS-my-AS" {
         value               = "AWS-my-AS"
         propagate_at_launch = true
     }
+}
+
+# AWS 서비스 및 지역 설정 (오하이오 지역)
+provider "aws" {
+    alias  = "ohio"
+    region = "us-east-2"
+}
+
+# S3 버킷 생성 (가장 저렴한 버전)
+resource "aws_s3_bucket" "my_s3_bucket" {
+    bucket = "cloud-hammer-developers-team"
+}
+
+# S3 버킷에 버전 관리 활성화
+resource "aws_s3_bucket_versioning" "my_s3_versioning" {
+    bucket = aws_s3_bucket.my_s3_bucket.bucket
+
+    versioning_configuration {
+        status = "Enabled"
+    }
+}
+
+# EC2 인스턴스 생성 (오하이오 지역)
+resource "aws_instance" "AWS-my-EC2-OH" {
+    provider      = aws.ohio  # 오하이오 지역 설정을 사용
+    ami           = "ami-06d4b7182ac3480fa"
+    instance_type = "t2.micro"
+    # subnet_id     = aws_subnet.AWS-my-subnet-A.id
+
+    tags = {
+        Name = "AWS-my-EC2-OH"
+    }
+
+    # 보안 그룹 설정
+    # vpc_security_group_ids = [aws_security_group.AWS-my-sg.id]
 }
