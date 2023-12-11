@@ -4,37 +4,37 @@ provider "aws" {
 }
 
 # VPC 리소스 생성
-resource "aws_vpc" "AWS-my-vpc" {
+resource "aws_vpc" "AWS-VPC" {
     cidr_block = "172.16.0.0/16"
     tags = {
-        Name = "AWS-my-vpc"
+        Name = "AWS-VPC"
     }
 }
 
 # Subnet 리소스 생성
-resource "aws_subnet" "AWS-my-subnet-A" {
-    vpc_id            = aws_vpc.AWS-my-vpc.id
+resource "aws_subnet" "AWS-Subnet" {
+    vpc_id            = aws_vpc.AWS-VPC.id
     cidr_block        = "172.16.10.0/24"
     availability_zone = "ap-northeast-2a"
     tags = {
-        Name = "AWS-my-subnet-A"
+        Name = "AWS-Subnet"
     }
 }
 
-resource "aws_subnet" "AWS-my-subnet-B" {
-    vpc_id            = aws_vpc.AWS-my-vpc.id
+/* resource "aws_subnet" "AWS-Subnet-B" {
+    vpc_id            = aws_vpc.AWS-VPC.id
     cidr_block        = "172.16.20.0/24"
     availability_zone = "ap-northeast-2c"
     tags = {
-        Name = "AWS-my-subnet-B"
+        Name = "AWS-Subnet-B"
     }
-}
+} */
 
 # 보안 그룹 생성
-resource "aws_security_group" "AWS-my-sg" {
-    name        = "AWS-my-sg"
+resource "aws_security_group" "AWS-SecurityGroup" {
+    name        = "AWS-SecurityGroup"
     description = "Security group for my EC2 instance"
-    vpc_id      = aws_vpc.AWS-my-vpc.id
+    vpc_id      = aws_vpc.AWS-VPC.id
 
     ingress {
         from_port   = 22
@@ -66,21 +66,21 @@ resource "aws_security_group" "AWS-my-sg" {
 }
 
 # EC2 인스턴스 생성
-resource "aws_instance" "AWS-my-EC2" {
+resource "aws_instance" "AWS-Server" {
     ami           = "ami-01123b84e2a4fba05"
     instance_type = "t2.micro"
-    subnet_id     = aws_subnet.AWS-my-subnet-A.id
+    subnet_id     = aws_subnet.AWS-Subnet.id
 
     tags = {
-        Name = "AWS-my-EC2"
+        Name = "AWS-Server"
     }
 
     # 보안 그룹 설정
-    vpc_security_group_ids = [aws_security_group.AWS-my-sg.id]
+    vpc_security_group_ids = [aws_security_group.AWS-SecurityGroup.id]
 }
 
 # 오토스케일링에 사용될 Launch Configuration 생성
-resource "aws_launch_configuration" "AWS-my-AS-config" {
+resource "aws_launch_configuration" "AWS-AS-config" {
     name                 = "myLaunchConfig"
     image_id             = "ami-01123b84e2a4fba05"
     instance_type        = "t2.micro"
@@ -92,21 +92,25 @@ resource "aws_launch_configuration" "AWS-my-AS-config" {
 }
 
 # 오토스케일링 그룹 생성
-resource "aws_autoscaling_group" "AWS-my-AS" {
+resource "aws_autoscaling_group" "AWS-AutoScaling" {
     desired_capacity     = 2
     max_size             = 3
     min_size             = 1
-    vpc_zone_identifier = [aws_subnet.AWS-my-subnet-A.id, aws_subnet.AWS-my-subnet-B.id]
-    launch_configuration = aws_launch_configuration.AWS-my-AS-config.id
+    vpc_zone_identifier = [aws_subnet.AWS-Subnet.id]
+    launch_configuration = aws_launch_configuration.AWS-AS-config.id
 
     tag {
         key                 = "Name"
-        value               = "AWS-my-AS"
+        value               = "AWS-AutoScaling"
         propagate_at_launch = true
     }
 }
 
-# AWS 서비스 및 지역 설정 (오하이오 지역)
+
+
+
+
+/* # AWS 서비스 및 지역 설정 (오하이오 지역)
 provider "aws" {
     alias  = "ohio"
     region = "us-east-2"
@@ -140,3 +144,4 @@ resource "aws_instance" "AWS-my-EC2-OH" {
     # 보안 그룹 설정
     # vpc_security_group_ids = [aws_security_group.AWS-my-sg.id]
 }
+ */
