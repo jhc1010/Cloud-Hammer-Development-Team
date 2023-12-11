@@ -3,6 +3,7 @@ gcp_key.json
 naver.json
 aws.json
 azure.json
+ncp20231116.pem
 # Local .terraform directories
 **/.terraform/*
 
