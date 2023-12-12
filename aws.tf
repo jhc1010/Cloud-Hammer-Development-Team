@@ -75,7 +75,7 @@ resource "aws_instance" "AWS-Server" {
 
 # 오토스케일링에 사용될 Launch Configuration 생성
 resource "aws_launch_configuration" "AWS-AS-config" {
-    name                 = "myLaunchConfig"
+    name                 = "myNewLaunchConfig"  # 변경된 이름 사용
     image_id             = "ami-01123b84e2a4fba05"
     instance_type        = "t2.micro"
     associate_public_ip_address = true
