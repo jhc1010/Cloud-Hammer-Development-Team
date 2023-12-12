@@ -1,7 +1,7 @@
 # Google Cloud Provider 설정
 provider "google" {
   credentials = file("gcp_key.json") # GCP에 로그인하기 위한 키 파일 경로
-  project     = "airy-runway-405810"  # 사용할 프로젝트 ID
+  project     = file("사용할 프로젝트 ID")  # 사용할 프로젝트 ID
   region      = "us-central1"         # 인스턴스를 배포할 지역
   zone        = "us-central1-a"       # 인스턴스를 배포할 존
 }
