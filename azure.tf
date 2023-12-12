@@ -1,16 +1,6 @@
-# Terraform을 통한 Azure Provider 구성
-terraform {
-  required_providers {
-    azurerm = {
-      source  = "hashicorp/azurerm"
-      version = "~>3.81.0"
-    }
-  }
-}
-
 # Azure Provider 설정
 provider "azurerm" {
-  features = {}
+  features {}
   subscription_id    = jsondecode(file("azure.json")).azure_credentials.subscription_id
   client_id          = jsondecode(file("azure.json")).azure_credentials.client_id
   client_secret      = jsondecode(file("azure.json")).azure_credentials.client_secret
@@ -29,7 +19,7 @@ resource "azurerm_resource_group" "myterraformgroup" {
 
 # 가상 네트워크 생성
 resource "azurerm_virtual_network" "myterraformnetwork" {
-    name                = "azure-vpc"                           # 가상 네트워크 이름
+    name                = "azure-subnet"                           # 가상 네트워크 이름
     address_space       = ["10.0.0.0/16"]                     # IP 주소 공간
     location            = "koreacentral"                    # 가상 네트워크 위치
     resource_group_name = azurerm_resource_group.myterraformgroup.name  # 속한 리소스 그룹
@@ -59,14 +49,9 @@ resource "azurerm_public_ip" "myterraformpublicip" {
     }
 }
 
-# 출력: 가상 머신의 공용 IP 주소
-output "vm_public_ip" {
-    value = "${azurerm_public_ip.myterraformpublicip.*.ip_address}"
-}
-
 # 네트워크 보안 그룹 및 규칙 생성
 resource "azurerm_network_security_group" "myterraformnsg" {
-    name                = "Azure-SecurityGroup"      # 네트워크 보안 그룹 이름
+    name                = "auzre-sg"      # 네트워크 보안 그룹 이름
     location            = "koreacentral"               # 네트워크 보안 그룹 위치
     resource_group_name = azurerm_resource_group.myterraformgroup.name  # 속한 리소스 그룹
 
@@ -145,7 +130,7 @@ output "tls_private_key" {
 }
 
 # 가상 머신 생성
-resource "azurerm_linux_virtual_machine_scale_set" "example" {
+resource "azurerm_linux_virtual_machine" "myterraformvm" {
     name                  = "azure-server"                                           # 가상 머신 이름
     location              = "koreacentral"                                  # 가상 머신 위치
     resource_group_name   = azurerm_resource_group.myterraformgroup.name     # 속한 리소스 그룹
@@ -177,10 +162,6 @@ resource "azurerm_linux_virtual_machine_scale_set" "example" {
     boot_diagnostics {
         storage_account_uri = azurerm_storage_account.mystorageaccount.primary_blob_endpoint  # 부팅 진단을 위한 스토리지 계정 URI
     }
-    lifecycle {
-    ignore_changes = [instances]
-  }
-
 
     tags = {
         environment = "Terraform Demo"  # 태그: 환경
