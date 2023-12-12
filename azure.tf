@@ -50,14 +50,9 @@ resource "azurerm_public_ip" "myterraformpublicip" {
     }
 }
 
-# 출력: 가상 머신의 공용 IP 주소
-output "vm_public_ip" {
-    value = "${azurerm_public_ip.myterraformpublicip.*.ip_address}"
-}
-
 # 네트워크 보안 그룹 및 규칙 생성
 resource "azurerm_network_security_group" "myterraformnsg" {
-    name                = "myNetworkSecurityGroup"      # 네트워크 보안 그룹 이름
+    name                = "auzre-sg"      # 네트워크 보안 그룹 이름
     location            = "koreacentral"               # 네트워크 보안 그룹 위치
     resource_group_name = azurerm_resource_group.myterraformgroup.name  # 속한 리소스 그룹
 
