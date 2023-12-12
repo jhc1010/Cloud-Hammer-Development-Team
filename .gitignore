@@ -1,7 +1,8 @@
 # Add Multi Cloud Keys !!!
-gcp_key.json
-naver.json
+gcp.json
+ncp.json
 aws.json
+azure.json
 # Local .terraform directories
 **/.terraform/*
 
